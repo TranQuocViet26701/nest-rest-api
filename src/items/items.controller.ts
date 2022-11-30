@@ -18,29 +18,32 @@ export class ItemsController {
   constructor(private itemsService: ItemsService) {}
 
   @Get()
-  findAll(@Req() req: Request): Item[] {
+  findAll(@Req() req: Request): Promise<Item[]> {
     console.log('req headers: ', req.headers);
 
     return this.itemsService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return `This action return a #${id} item`;
+  findOne(@Param('id') id: string): Promise<Item> {
+    return this.itemsService.findOne(id);
   }
 
   @Post()
-  create(@Body() createItemDto: CreateItemDto): string {
-    return `This action adds a new item {name: ${createItemDto.name}, desc: ${createItemDto.desc}}`;
+  create(@Body() createItemDto: CreateItemDto): Promise<Item> {
+    return this.itemsService.create({ ...createItemDto });
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() createItemDto: CreateItemDto) {
-    return `This action updates #${id} item with {name: ${createItemDto.name}, desc: ${createItemDto.desc}}`;
+  update(
+    @Param('id') id: string,
+    @Body() createItemDto: CreateItemDto,
+  ): Promise<Item> {
+    return this.itemsService.update(id, createItemDto);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return `This action removes #${id} item`;
+  delete(@Param('id') id: string): Promise<Item> {
+    return this.itemsService.delete(id);
   }
 }
